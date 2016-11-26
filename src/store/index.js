@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import getSubmissions from '../get_submissions.js';
+import getSubmissions from '../services/get_submissions.js';
 
 Vue.use(Vuex);
 
