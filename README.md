@@ -1,6 +1,9 @@
 # functional_form
 
-> A Vue.js project
+Email form backend webapp.
+
+A Vue.js project. Experimenting with a browser client that will eventually fetch
+data from AWS Lambda backend.
 
 ## Build Setup
 
