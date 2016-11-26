@@ -12,12 +12,15 @@ function findInCollection(id, collection) {
   return item;
 }
 
+let hackySubmissionsCache = {};
+
 const store = new Vuex.Store({
   state: {
     forms: [],
     form: undefined,
     submissions: [],
     submission: undefined,
+    cachedSubmissions: {}
   },
 
   actions: {
@@ -51,10 +54,22 @@ const store = new Vuex.Store({
     LOAD_SUBMISSIONS(context, formId) {
       const { commit } = context;
 
-      getSubmissions(formId, function(err, data){
-        commit('SET_SUBMISSIONS', data);
-        return data;
-      });
+      // TODO get rid of the caching here, doesn't belong at this layer!
+      // Hack for now to keep data from reloading all the time since
+      // it's randomly generated on the dev backend
+      //
+      // Also because this is cached, deletes don't actually stick
+
+      if (hackySubmissionsCache[formId]) {
+        commit('SET_SUBMISSIONS', hackySubmissionsCache[formId]);
+        return hackySubmissionsCache[formId];
+      } else {
+        getSubmissions(formId, function(err, data){
+          hackySubmissionsCache[formId] = data;
+          commit('SET_SUBMISSIONS', data);
+          return data;
+        });
+      }
     }
   },
 
