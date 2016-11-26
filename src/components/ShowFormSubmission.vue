@@ -28,7 +28,6 @@
 
 <script>
 import FormNav from './FormNav.vue'
-import getSubmissions from '../services/get_submissions.js'
 
 function findSubmission(id, submissions) {
   let submission = submissions.find(function(submission){
