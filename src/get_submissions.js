@@ -20,10 +20,12 @@ function generateSubmissions() {
 }
 
 module.exports = function(formId, callback) {
+  console.log('getting submissions for formId', formId);
+
   if (submissions[formId]) {
     callback(null, submissions[formId]);
   } else {
-    $.get("http://localhost:9393/submissions/" + formId, function(data){
+    $.get(`http://localhost:9393/submissions/${formId}`, function(data){
       submissions[formId] = data;
       callback(null, data);
     });

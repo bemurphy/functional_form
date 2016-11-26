@@ -4,16 +4,33 @@ import getSubmissions from '../get_submissions.js';
 
 Vue.use(Vuex);
 
+function findInCollection(id, collection) {
+  let item = collection.find(function(item){
+    return item.id === parseInt(id);
+  }) || {};
+
+  return item;
+}
+
 const store = new Vuex.Store({
   state: {
-    submissions: [],
     forms: [],
-    form: undefined
+    form: undefined,
+    submissions: [],
+    submission: undefined,
   },
 
   actions: {
     SET_FORM(context, form) {
       context.commit('SET_FORM', form);
+    },
+
+    SET_SUBMISSION(context, submissionId) {
+      context.commit('SET_SUBMISSION', submissionId);
+    },
+
+    DELETE_SUBMISSION(context, submissionId) {
+      context.commit('DELETE_SUBMISSION', submissionId);
     },
 
     LOAD_FORMS(context) {
@@ -25,14 +42,16 @@ const store = new Vuex.Store({
         { id: 3, name: "Vuex Form Three" },
       ];
 
-      commit('SET_FORMS', collection);
-      return collection;
+      $.get('http://localhost:9393/forms', function(data){
+        commit('SET_FORMS', data);
+        return data;
+      });
     },
 
-    LOAD_SUBMISSIONS(context) {
+    LOAD_SUBMISSIONS(context, formId) {
       const { commit } = context;
 
-      getSubmissions(1, function(err, data){
+      getSubmissions(formId, function(err, data){
         commit('SET_SUBMISSIONS', data);
         return data;
       });
@@ -41,7 +60,10 @@ const store = new Vuex.Store({
 
   getters: {
     activeForm(state) {
-      return state.form || {};
+      let id = state.route.params.form_id;
+      if (id) return findInCollection(id, state.forms) || {};
+      return {};
+      // return state.form || {};
     },
 
     forms(state) {
@@ -52,14 +74,19 @@ const store = new Vuex.Store({
       return [];
     },
 
+    submission(state) {
+      let id = state.route.params.id;
+      if (id) return findInCollection(id, state.submissions) || {};
+      return {};
+    },
+
     submissions(state) {
-      if (state.submissions !== null) {
+      if (state.submissions) {
         return state.submissions;
       }
 
       return [];
     },
-
   },
 
   mutations: {
@@ -69,6 +96,18 @@ const store = new Vuex.Store({
 
     SET_FORMS(state, collection) {
       state.forms = collection;
+    },
+
+    SET_SUBMISSION(state, submissionId) {
+      if (state.submissions) {
+        state.submission = findSubmission(submissionId, state.submissions);
+      }
+    },
+
+    DELETE_SUBMISSION(state, submissionId) {
+      state.submissions = state.submissions.filter(function(sub){
+        return sub.id !== submissionId;
+      });
     },
 
     SET_SUBMISSIONS(state, collection) {

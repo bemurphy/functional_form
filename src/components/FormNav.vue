@@ -5,7 +5,7 @@
         <select class="form-control" v-model="selected">
           <option v-for="form in forms" :value="form.id">{{form.name}}</option>
         </select>
-        selected {{ selected }}
+        <span v-if="false">selected {{ selected }}</span>
       </div>
     </div>
 
@@ -45,14 +45,27 @@
 <script>
 export default {
   data () {
-    return {
-      selected: this.$route.params.form_id
+    return {};
+  },
+
+  computed: {
+    selected: {
+      get() {
+        return this.$store.getters.activeForm.id;
+      },
+
+      set(formId) {
+        this.$store.dispatch('LOAD_SUBMISSIONS', formId);
+        this.$router.push({name: 'FormSubmissions', params: { form_id: formId }});
+      }
     }
   },
+
   props: ['form', 'forms'],
+
   methods: {
     isActive: function(v) {
-      let rgx = new RegExp('/' + v + '/');
+      let rgx = new RegExp('/' + v + '(/|$)');
       return rgx.exec(this.$route.path);
     }
   }

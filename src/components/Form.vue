@@ -25,10 +25,9 @@ function fetchForms(store) {
 
 export default {
   data () {
-    return {
-      form: {},
-    }
+    return {}
   },
+
   computed: {
     form() {
       return this.$store.getters.activeForm;
@@ -38,21 +37,14 @@ export default {
       return this.$store.getters.forms;
     }
   },
+
   components: {
     FormNav
   },
+
   beforeMount() {
-    this.$store.dispatch('SET_FORM', { id: 1, name: "testing" });
     fetchForms(this.$store);
   },
-  nobeforeRouteEnter (to, from, next) {
-    next(vm => {
-      getForms(function(err, forms) {
-        vm.forms = forms;
-        vm.form = findForm(to.params.form_id, forms);
-      });
-    });
-  }
 }
 </script>
 

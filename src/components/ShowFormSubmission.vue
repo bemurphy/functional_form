@@ -10,8 +10,8 @@
       </div>
       <div class="col-md-7 col-md-offset-1 submission">
         <div class="actions pull-right">
-          <a href="#" @click.prevent="" class="btn btn-primary btn-sm">Reply</a>
-          <a href="#" @click.prevent="" class="btn btn-danger btn-sm">Delete</a>
+          <a :href="'mailto:' + submission.email" class="btn btn-primary btn-sm">Reply</a>
+          <a href="#" @click.prevent="remove(submission)" class="btn btn-danger btn-sm">Delete</a>
         </div>
         <img :src="submission.avatar" width="64" class="img-circle img-avatar">
         <h4 class="submission-name">{{ submission.email }}</h4>
@@ -38,8 +38,8 @@ function findSubmission(id, submissions) {
   return submission;
 }
 
-function fetchSubmissions(store) {
-  return store.dispatch('LOAD_SUBMISSIONS');
+function fetchSubmissions(store, formId) {
+  return store.dispatch('LOAD_SUBMISSIONS', formId);
 }
 
 export default {
@@ -59,6 +59,8 @@ export default {
     },
 
     submission() {
+      return this.$store.getters.submission;
+
       let submission = findSubmission(this.$route.params.id, this.$store.getters.submissions);
 
       if (submission) {
@@ -76,12 +78,21 @@ export default {
       }
 
       return a;
+    },
+  },
+
+  methods: {
+    remove(submission) {
+      if (confirm('Are you sure?')) {
+        this.$store.dispatch('DELETE_SUBMISSION', submission.id);
+        this.$router.push({name: 'FormSubmissions', params: { form_id: this.form.id }});
+      }
     }
   },
 
   beforeMount() {
-    fetchSubmissions(this.$store);
-  }
+    fetchSubmissions(this.$store, this.$route.params.form_id);
+  },
 }
 </script>
 

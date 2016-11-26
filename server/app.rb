@@ -83,11 +83,11 @@ https://s3.amazonaws.com/uifaces/faces/twitter/gojeanyn/128.jpg
 ]
 
 Cuba.define do
-  def generate_submissions
+  def generate_submissions(form_id)
     1.upto(10).map do |i|
       {
         id: i,
-        email: Faker::Internet.email,
+        email: Faker::Internet.email.sub("@", "+#{form_id}@"),
         avatar: AVATARS.sample,
         name: Faker::Name.name,
         phone_number: Faker::PhoneNumber.phone_number,
@@ -112,6 +112,6 @@ Cuba.define do
   end
 
   on get, "submissions/:form_id" do |form_id|
-    res.write JSON.dump(generate_submissions)
+    res.write JSON.dump(generate_submissions(form_id))
   end
 end
