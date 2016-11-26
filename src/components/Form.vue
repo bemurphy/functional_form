@@ -13,29 +13,39 @@
 import FormNav from './FormNav.vue'
 import getForms from '../get_forms.js'
 
-const forms = [
-  { id: 1, name: 'Test Form' },
-  { id: 2, name: 'Other Form' },
-  { id: 3, name: 'Another Form' },
-]
-
 function findForm(id, forms) {
   return forms.find(function(form){
     return form.id === parseInt(id);
   });
 }
 
+function fetchForms(store) {
+  return store.dispatch('LOAD_FORMS');
+}
+
 export default {
   data () {
     return {
       form: {},
-      forms: [],
+    }
+  },
+  computed: {
+    form() {
+      return this.$store.getters.activeForm;
+    },
+
+    forms() {
+      return this.$store.getters.forms;
     }
   },
   components: {
     FormNav
   },
-  beforeRouteEnter (to, from, next) {
+  beforeMount() {
+    this.$store.dispatch('SET_FORM', { id: 1, name: "testing" });
+    fetchForms(this.$store);
+  },
+  nobeforeRouteEnter (to, from, next) {
     next(vm => {
       getForms(function(err, forms) {
         vm.forms = forms;

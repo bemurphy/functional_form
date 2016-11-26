@@ -30,29 +30,46 @@
 import FormNav from './FormNav.vue'
 import getSubmissions from '../get_submissions.js'
 
+function findSubmission(id, submissions) {
+  let submission = submissions.find(function(submission){
+    return submission.id === parseInt(id);
+  }) || {};
+
+  return submission;
+}
+
+function fetchSubmissions(store) {
+  return store.dispatch('LOAD_SUBMISSIONS');
+}
+
 export default {
-  data () {
-    return {
-      submissions: undefined,
-    };
+  data() {
+    return {};
   },
+
   props: ['form'],
+
   components: {
     FormNav
   },
+
   computed: {
-    submission () {
-      if (!this.$data || !this.$data.submissions) return {};
-
-      let id = parseInt(this.$route.params.id);
-
-      return this.$data.submissions.find(function(submission){
-        if (submission.id === id) return true;
-      });
+    submissions() {
+      return this.$store.getters.submissions;
     },
 
-    submissionAttributes (submission) {
-      let a = {}
+    submission() {
+      let submission = findSubmission(this.$route.params.id, this.$store.getters.submissions);
+
+      if (submission) {
+        return submission;
+      } else {
+        return {};
+      }
+    },
+
+    submissionAttributes(submission) {
+      let a = {};
 
       for(let prop in this.submission) {
         if (prop !== 'email' && prop !== 'id' && prop !== 'avatar') a[prop] = this.submission[prop];
@@ -61,14 +78,9 @@ export default {
       return a;
     }
   },
-  beforeRouteEnter (to, from, next) {
-    let formId = to.params.form_id;
 
-    next(vm => {
-      getSubmissions(formId, function(err, submissions) {
-        vm.submissions = submissions;
-      });
-    });
+  beforeMount() {
+    fetchSubmissions(this.$store);
   }
 }
 </script>
