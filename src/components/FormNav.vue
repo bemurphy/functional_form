@@ -1,6 +1,10 @@
 <template>
   <div id="form-nav" class="col-md-12">
-    <form-picker :form="form" :forms="forms"></form-picker>
+    <div class="row">
+      <div class="col-md-3">
+        <form-picker :form="form" :forms="forms"></form-picker>
+      </div>
+    </div>
 
     <br />
 

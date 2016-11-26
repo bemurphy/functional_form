@@ -1,12 +1,7 @@
 <template>
-  <div class="row">
-    <div class="col-md-3">
-      <select class="form-control" v-model="selected">
-        <option v-for="form in forms" :value="form.id">{{form.name}}</option>
-      </select>
-      <span v-if="false">selected {{ selected }}</span>
-    </div>
-  </div>
+  <select class="form-control" v-model="selected">
+    <option v-for="form in forms" :value="form.id">{{form.name}}</option>
+  </select>
 </template>
 
 <script>
