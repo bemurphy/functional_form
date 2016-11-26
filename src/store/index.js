@@ -29,10 +29,6 @@ const store = new Vuex.Store({
       context.commit('SET_FORM', form);
     },
 
-    SET_SUBMISSION(context, submissionId) {
-      context.commit('SET_SUBMISSION', submissionId);
-    },
-
     DELETE_SUBMISSION(context, submissionId) {
       context.commit('DELETE_SUBMISSION', submissionId);
     },
@@ -106,12 +102,6 @@ const store = new Vuex.Store({
 
     SET_FORMS(state, collection) {
       state.forms = collection;
-    },
-
-    SET_SUBMISSION(state, submissionId) {
-      if (state.submissions) {
-        state.submission = findSubmission(submissionId, state.submissions);
-      }
     },
 
     DELETE_SUBMISSION(state, submissionId) {
