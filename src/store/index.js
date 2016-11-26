@@ -39,12 +39,6 @@ const store = new Vuex.Store({
     LOAD_FORMS(context) {
       const { commit } = context;
 
-      const collection = [
-        { id: 1, name: "Vuex Form One" },
-        { id: 2, name: "Vuex Form Two" },
-        { id: 3, name: "Vuex Form Three" },
-      ];
-
       $.get('http://localhost:9393/forms', function(data){
         commit('SET_FORMS', data);
         return data;

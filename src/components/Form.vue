@@ -11,7 +11,6 @@
 
 <script>
 import FormNav from './FormNav.vue'
-import getForms from '../services/get_forms.js'
 
 function findForm(id, forms) {
   return forms.find(function(form){
