@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import getForms from '../services/get_forms.js';
 import getSubmissions from '../services/get_submissions.js';
 
 Vue.use(Vuex);
@@ -39,7 +40,7 @@ const store = new Vuex.Store({
     LOAD_FORMS(context) {
       const { commit } = context;
 
-      $.get('http://localhost:9393/forms', function(data){
+      getForms(function(err, data){
         commit('SET_FORMS', data);
         return data;
       });
